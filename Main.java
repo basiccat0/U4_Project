@@ -1,6 +1,7 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -38,41 +39,38 @@ public class Main {
                 cards[i] = cards[i].trim();
             }
             int[] counts = new int[5];
+            boolean[] counted = new boolean[5];
 
             for (int i = 0; i < 5; i++) {
+                if (counted[i]) continue;
+
                 int count = 1;
+
                 for (int j = i + 1; j < 5; j++) {
                     if (cards[i].equals(cards[j])) {
                         count++;
+                        counted[j] = true;
                     }
                 }
 
                 counts[i] = count;
             }
 
-            int most = 0;
-            int secondMost = 0;
+            Arrays.sort(counts);
+            int max = counts[4];
+            int second = counts[3];
 
-            for (int i = 0; i < 5; i++) {
-                if (counts[i] > most) {
-                    secondMost = most;
-                    most = counts[i];
-                } else if (counts[i] > secondMost) {
-                    secondMost = counts[i];
-                }
-            }
-            
-            if (most == 5) {
+            if (max == 5) {
                 fiveKind++;
-            } else if (most == 4) {
+            } else if (max == 4) {
                 fourKind++;
-            } else if (most == 3 && secondMost == 2) {
+            } else if (max == 3 && second == 2) {
                 fullHouse++;
-            } else if (most == 3) {
+            } else if (max == 3) {
                 threeKind++;
-            } else if (most == 2 && secondMost == 2) {
+            } else if (max == 2 && second == 2) {
                 twoPair++;
-            } else if (most == 2) {
+            } else if (max == 2) {
                 onePair++;
             } else {
                 highCard++;
