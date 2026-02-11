@@ -1,7 +1,6 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -32,11 +31,11 @@ public class Main {
 
         String[] hand = fileData.split("\n");
         for (int h = 0; h < hand.length; h++) {
-            String handPart = hand[h].split("\\|")[0];
-            String[] cards = handPart.split(",");
+            String bid = hand[h].split("\\|")[0];
+            String[] deck = bid.split(",");
 
-            for (int i = 0; i < cards.length; i++) {
-                cards[i] = cards[i].trim();
+            for (int i = 0; i < deck.length; i++) {
+                deck[i] = deck[i].trim();
             }
             int[] counts = new int[5];
             boolean[] counted = new boolean[5];
@@ -47,7 +46,7 @@ public class Main {
                 int count = 1;
 
                 for (int j = i + 1; j < 5; j++) {
-                    if (cards[i].equals(cards[j])) {
+                    if (deck[i].equals(deck[j])) {
                         count++;
                         counted[j] = true;
                     }
@@ -56,12 +55,21 @@ public class Main {
                 counts[i] = count;
             }
 
-            Arrays.sort(counts);
-            int max = counts[4];
-            int second = counts[3];
+            int max = 0;
+            int second = 0;
+
+            for (int i = 0; i < 5; i++) {
+                if (counts[i] > max) {
+                    second = max;
+                    max = counts[i];
+                } else if (counts[i] > second) {
+                    second = counts[i];
+                }
+            }
 
             if (max == 5) {
                 fiveKind++;
+
             } else if (max == 4) {
                 fourKind++;
             } else if (max == 3 && second == 2) {
@@ -76,6 +84,20 @@ public class Main {
                 highCard++;
             }
         }
+
+        int total = 0;
+
+        for (int i = 0; i < hand.length; i++) {
+            int rank = 1;
+
+            for (int j = 0; j < hand.length; j++) {
+                if (compare(i, j, allCards, type) > 0)
+                    rank++;
+            }
+
+            total += (int) rank * bids[i];
+        }
+
         System.out.println("Number of five of a kind hands: " + fiveKind);
         System.out.println("Number of full house hands: " + fullHouse);
         System.out.println("Number of four of a kind hands: " + fourKind);
